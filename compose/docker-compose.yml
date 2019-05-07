@@ -1,0 +1,8 @@
+version: "3"
+services:
+  app:
+    build:
+      context: ../app
+      dockerfile: ../Dockerfile
+    image: us.gcr.io/dataplatform-1363/${IMAGE_BASE_NAME}:dev
+    network_mode: bridge
