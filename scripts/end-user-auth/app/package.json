@@ -1,0 +1,23 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "app",
+  "repository": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --require coffeescript/register"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^6.1.4"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "bluebird": "^3.5.4",
+    "coffeescript": "^2.4.1",
+    "lodash": "^4.17.11"
+  }
+}
