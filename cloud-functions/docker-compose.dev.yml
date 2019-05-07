@@ -17,6 +17,8 @@ services:
   gcloud:
     image: google/cloud-sdk:244.0.0-alpine
     <<: *default
+    working_dir: /func1
+    command: sh deploy.sh
 
 volumes: 
   gcloud_config: {}

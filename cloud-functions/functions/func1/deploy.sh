@@ -1,5 +1,5 @@
 gcloud functions deploy \
-func1 \
+test-cloud-run--func1-node8-service-to-service \
 --region=asia-east2 \
 --entry-point=handler \
 --memory=128MB \
