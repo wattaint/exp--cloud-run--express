@@ -41,7 +41,7 @@ program
     display()
 
 program
-  .command 'account'
+  .command 'user'
   .action ->
     { oauth2 } = await require('./libs/auth')()
     
@@ -60,15 +60,21 @@ program
     { data } = await oauth2.userinfo.get {
       fields: "email,id,name"
     }
+    console.log '-----------'
     console.log data
-    console.log '-----'
-    console.log "Invoking: #{url} "
-    { access_token } = oauth2Client.credentials
-
-    { data } = await axios.request {
+    console.log '-----------'
+    console.log "Send Request to: #{url} "
+    { id_token } = oauth2Client.credentials
+    
+    conf = {
       url,
-      header: "Authorize: Bearer #{access_token}"
+      method: 'get'
+      headers: {
+        Authorization: "Bearer #{id_token}"
+      }
     }
+    console.log conf
+    { data } = await axios.request conf
 
     console.log 'Response:'
     console.log data
