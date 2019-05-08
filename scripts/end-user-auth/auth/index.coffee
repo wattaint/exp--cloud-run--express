@@ -1,16 +1,9 @@
 #!/usr/bin/env coffee
 axios     = require 'axios'
 colors    = require 'colors'
-fg        = require 'fast-glob'
-fs        = require 'fs'
-fsx       = require 'fs-extra'
-
 inquirer  = require('inquirer')
-path      = require 'path'
 program   = require 'commander'
 { promisify } = require 'util'
-
-readFile  = promisify(fs.readFile)
 
 program
   .command 'login'
