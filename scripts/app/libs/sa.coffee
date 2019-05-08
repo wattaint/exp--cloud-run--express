@@ -14,23 +14,22 @@ self = (aFilePath) ->
     console.log colors.red "Service account file not found! #{filePath}"
     return process.exit 1
 
-  { client_id, client_email, private_key, private_key_id } = await fsx.readJson aFilePath
+  { client_email, private_key } = await fsx.readJson aFilePath
 
   me = {
     buildJWTToken: (url) ->
       header = { alg: "RS256", typ: "JWT" }
       payload = {
-        iss: client_email
         aud: 'https://www.googleapis.com/oauth2/v4/token'
-        target_audience: url
         exp: moment().add(1, 'hours').unix()
         iat: moment().unix()
+        iss: client_email
+        target_audience: url
       }
 
-      token = jws.sign { header, payload, secret: private_key }
-      token
-
-    fetchIdToken: (jwt) ->
+      jws.sign { header, payload, secret: private_key }
+      
+    fetchIdToken: (assertion) ->
       conf = {
         url: "https://www.googleapis.com/oauth2/v4/token",
         headers: {
@@ -39,7 +38,7 @@ self = (aFilePath) ->
         method: "post"
         data: qs.stringify {
           grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer"
-          assertion: jwt
+          assertion
         }
       }
       
