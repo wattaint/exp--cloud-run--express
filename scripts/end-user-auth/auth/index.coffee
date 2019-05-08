@@ -4,7 +4,7 @@ colors    = require 'colors'
 fg        = require 'fast-glob'
 fs        = require 'fs'
 fsx       = require 'fs-extra'
-querystring = require('querystring')
+
 inquirer  = require('inquirer')
 path      = require 'path'
 program   = require 'commander'
@@ -60,105 +60,45 @@ program
 
 program
   .command 'invoke'
-  .action ->
-    url = "https://exp-cloud-run--express-tyk25nmqfq-uc.a.run.app/env"
-    { oauth2Client, oauth2 } = await require('./libs/auth')()
-    console.log 'Fetching User Info'
-    { data } = await oauth2.userinfo.get {
-      fields: "email,id,name"
-    }
-    console.log '-----------'
-    console.log data
-    console.log '-----------'
-    console.log "Send Request to: #{url} "
-    { id_token } = oauth2Client.credentials
-    
-    conf = {
-      url,
-      method: 'get'
-      headers: {
-        Authorization: "Bearer #{id_token}"
-      }
-    }
-    console.log conf
-    { data } = await axios.request conf
-
-    console.log 'Response:'
-    console.log data
-
-program
-  .command "service-account <file-path>"
-  .option '--to-jwt'
-  .action (filePath, { toJwt }) ->
-    { toJwt, fetchToken } = await require('./libs/sa')(filePath)
-    jwt = await toJwt(url, data)
-
-    #url = "https://exp-cloud-run--express-tyk25nmqfq-uc.a.run.app"
-
-    jwt = fetchToken(data, url)
-    url = "https://www.googleapis.com/oauth2/v4/token"
-    conf = {
-      url,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-      method: "post"
-      data: querystring.stringify {
-        grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer"
-        assertion: jwt
-      }
-    }
-    console.log conf
-    { data } = await axios.request conf
-    console.log '------'
-    console.log data
-
-    # console.log '------ y ---------'
-    # url = "https://exp-cloud-run--express-tyk25nmqfq-uc.a.run.app"
-    # token2 = await fetchToken(data, url)
-
-    # console.log '------ x ------', token2
-    # url = "https://www.googleapis.com/oauth2/v4/token"
-    # conf = {
-    #   url,
-    #   headers: {
-    #     Authorization: "Bearer #{data.access_token}"
-    #     'Content-Type': 'application/x-www-form-urlencoded'
-    #   }
-    #   method: "post"
-    #   data: querystring.stringify {
-    #     grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer"
-    #     assertion: token2
-    #   }
-    # }
-    # console.log conf
-    # console.log await axios.request conf
-    # process.exit(1)
-    # conf = {
-    #   url,
-    #   method: 'get'
-    #   headers: {
-    #     Authorization: "Bearer #{data.access_token}"
-    #   }
-    # }
-    # console.log conf
-    # { data } = await axios.request conf
-
-    # console.log 'Response:'
-    # console.log data
+  .option '--sa <service-account-file>'
+  .action ({ sa }) ->
 
     url = "https://exp-cloud-run--express-tyk25nmqfq-uc.a.run.app/env"
-    conf = {
-      url,
-      method: 'get'
-      headers: {
-        Authorization: "Bearer #{data.id_token}"
-      }
-    }
-    console.log conf
-    { data } = await axios.request conf
 
-    console.log 'Response:'
-    console.log data
+    doRevoke = (token) ->
+      console.log ''
+      console.log colors.underline("Send Request to: ") + url
+      conf = {
+        url,
+        method: 'get'
+        headers: {
+          Authorization: "Bearer #{token}"
+        }
+      }
+      console.log conf
+      { data } = await axios.request conf
+
+      console.log ''
+      console.log colors.underline 'Response:'
+      console.log data
+
+    if sa
+      { buildJWTToken, fetchIdToken } = await require('./libs/sa')(sa)
+      jwt = await buildJWTToken(url)
+      { id_token } = await fetchIdToken jwt
+      await doRevoke id_token
+
+    else
+      { oauth2Client, oauth2 } = await require('./libs/auth')()
+      console.log ''
+      console.log colors.underline 'Fetching User Info'
+      { data } = await oauth2.userinfo.get {
+        fields: "email,id,name"
+      }
+      console.log data
+      
+      { id_token } = oauth2Client.credentials
+      
+      await doRevoke id_token
 
 program.parse process.argv

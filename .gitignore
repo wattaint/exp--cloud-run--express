@@ -1,4 +1,2 @@
 node_modules
-service-accounts
-client_secret.json
-dataplatform-1363-*.json
+scripts/end-user-auth/auth/service-accounts/*.json
