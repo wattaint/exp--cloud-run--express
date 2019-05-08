@@ -4,3 +4,5 @@ ENV PATH $PATH:/node_modules/.bin
 
 COPY package.json package-lock.json /
 RUN npm install
+
+WORKDIR /app
