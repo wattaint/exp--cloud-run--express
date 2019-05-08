@@ -1,2 +1,3 @@
 node_modules
-scripts/end-user-auth/auth/service-accounts/*.json
+scripts/end-user-auth/app/service-accounts/*.json
+client_secret.json

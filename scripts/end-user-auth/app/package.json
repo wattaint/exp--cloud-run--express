@@ -1,23 +1,26 @@
 {
-  "name": "app",
+  "name": "auth",
   "version": "1.0.0",
-  "description": "app",
-  "repository": "",
+  "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha --require coffeescript/register"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
-    "mocha": "^6.1.4"
-  },
   "dependencies": {
     "axios": "^0.18.0",
     "bluebird": "^3.5.4",
     "coffeescript": "^2.4.1",
-    "lodash": "^4.17.11"
-  }
+    "colors": "^1.3.3",
+    "commander": "^2.20.0",
+    "fast-glob": "^2.2.6",
+    "fs-extra": "^7.0.1",
+    "googleapis": "^39.2.0",
+    "inquirer": "^6.3.1",
+    "jws": "^3.2.2",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }
