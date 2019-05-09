@@ -6,7 +6,6 @@ axios     = require 'axios'
 colors    = require 'colors'
 fsx       = require 'fs-extra'
 jws       = require 'jws'
-jwt       = require 'jsonwebtoken'
 moment    = require 'moment'
 qs        = require 'querystring'
 

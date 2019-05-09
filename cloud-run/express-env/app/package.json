@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "bluebird": "^3.5.4",
     "coffeescript": "^2.4.1",
     "express": "^4.16.4",

@@ -57,11 +57,13 @@ program
     console.log ''
 
 program
-  .command 'iap'
+  .command 'invoke-iap-gce'
+  .option '--path <url-path>'
   .option '--sa <service-account-file>'
-  .action ({ sa }) ->
-
-    url = "https://dpapi-staging-dp.ascendanalyticshub.com/env"
+  .action ({ sa, path }) ->
+    url = "https://dpapi-staging-dp.ascendanalyticshub.com"
+    if path then url = url + "#{path}"
+    
     doRequest = (token) ->
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
       console.log ''
@@ -104,12 +106,14 @@ program
       await doRequest id_token
     
 program
-  .command 'invoke'
+  .command 'invoke-cloud-run'
   .option '--sa <service-account-file>'
-  .action ({ sa }) ->
-
-    url = "https://exp-cloud-run--express-tyk25nmqfq-uc.a.run.app/env"
-
+  .option '--path <url-path>'
+  .action ({ sa, path }) ->
+    url = "https://exp-cloud-run--express-tyk25nmqfq-uc.a.run.app"
+    if path
+      url = url + "#{path}"
+    
     doRevoke = (token) ->
       console.log ''
       console.log colors.underline("Send Request to: ") + url
