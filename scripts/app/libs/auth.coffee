@@ -11,7 +11,7 @@ readFile  = promisify(fs.readFile)
 
 TOKEN_PATH = "/data/token.json"
 REFRESH_TOKEN_PATH = "/data/refresh-token"
-{ client_id, client_secret, redirect_uris } = require('../client_secret.json').installed
+APP_SECRET_PATH = "/data/app.json"
 
 { google } = require 'googleapis'
 
@@ -21,13 +21,7 @@ scope = [
   'https://www.googleapis.com/auth/userinfo.profile'
 ]
 
-oauth2Client = new google.auth.OAuth2(
-  client_id,
-  client_secret,
-  redirect_uris[0]
-)
-
-setCredentials = ->
+setCredentials = (oauth2Client) ->
   { tokenExists, refreshTokenExists } = await Promise.props {
     tokenExists: fsx.exists TOKEN_PATH
     refreshTokenExists: fsx.exists REFRESH_TOKEN_PATH
@@ -50,11 +44,45 @@ setCredentials = ->
   
   cred
 
-self = (opts = {}) ->
+self = ({ login, appSecretJsonPath }) ->
   await fsx.ensureDir path.dirname TOKEN_PATH
-  
-  unless opts.login
-    cred = await setCredentials()
+
+  { tokenExists, refreshTokenExists, appSecretExists } = await Promise.props {
+    tokenExists: fsx.exists TOKEN_PATH
+    refreshTokenExists: fsx.exists REFRESH_TOKEN_PATH
+    appSecretExists: fsx.exists APP_SECRET_PATH
+  }
+
+  client_secret_name = ''
+  if appSecretJsonPath
+    client_secret_name = path.basename appSecretJsonPath
+    appClient = await fsx.readJson appSecretJsonPath
+    for prop, value of appClient
+      app_type = prop
+      
+      { client_id, client_secret, redirect_uris, project_id } = value
+
+    await fsx.writeJson APP_SECRET_PATH, {
+      client_secret_name, app_type, client_id, client_secret, redirect_uris, project_id
+    }
+
+  else if appSecretExists
+    { client_secret_name,
+      app_type, client_id, client_secret,
+      redirect_uris, project_id } = await fsx.readJSON APP_SECRET_PATH
+
+  unless client_id
+    console.log colors.red.bold 'No Application Secret Found!'
+    return process.exit 1
+
+  oauth2Client = new google.auth.OAuth2(
+    client_id,
+    client_secret,
+    redirect_uris[0]
+  )
+
+  unless login
+    cred = await setCredentials oauth2Client
     
     unless cred
       console.log colors.red.bold 'Refresh Token not found! Please login!'
@@ -70,6 +98,10 @@ self = (opts = {}) ->
       await fsx.writeJson TOKEN_PATH, tokens
 
   {
+    client_secret_name,
+    app_type,
+    client_id,
+    project_id,
     doLogout: ->
       await fsx.ensureDir path.dirname TOKEN_PATH
       await fsx.emptyDir path.dirname TOKEN_PATH
@@ -94,10 +126,10 @@ self = (opts = {}) ->
         await fsx.outputFile REFRESH_TOKEN_PATH, tokens.refresh_token
     
     display: ->
-      { tokenExists, refreshTokenExists } = await Promise.props {
-        tokenExists: fsx.exists TOKEN_PATH
-        refreshTokenExists: fsx.exists REFRESH_TOKEN_PATH
-      }
+      # { tokenExists, refreshTokenExists } = await Promise.props {
+      #   tokenExists: fsx.exists TOKEN_PATH
+      #   refreshTokenExists: fsx.exists REFRESH_TOKEN_PATH
+      # }
 
       errors = []
       unless tokenExists
