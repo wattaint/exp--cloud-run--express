@@ -1,3 +1,4 @@
 node_modules
 scripts/app/service-accounts/*.json
+scripts/app/clients/*.json
 client_secret.json
