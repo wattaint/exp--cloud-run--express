@@ -14,8 +14,8 @@ services:
     working_dir: /func1
     <<: *default
   
-  gcloud:
-    image: google/cloud-sdk:244.0.0-alpine
+  deploy:
+    image: google/cloud-sdk:245.0.0-alpine
     <<: *default
     working_dir: /func1
     command: sh deploy.sh
