@@ -1,0 +1,6 @@
+staging:
+  projectId: dataplatform-1363
+  functions:
+    test1:
+      serviceAccount: ddd@test.com
+      

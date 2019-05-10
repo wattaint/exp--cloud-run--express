@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+  gcloud:
+    build: 
+      context: .
+    network_mode: bridge
+    volumes: 
+      - gcloud_config:/root/.config
+      - .:/app
+    working_dir: /app
+
+volumes:
+  gcloud_config: {}
