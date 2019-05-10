@@ -13,6 +13,7 @@
     "bluebird": "^3.5.4",
     "coffeescript": "^2.4.1",
     "express": "^4.16.4",
+    "jws": "^3.2.2",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "nodemon": "^1.19.0",
