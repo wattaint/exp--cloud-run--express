@@ -1,0 +1,20 @@
+version: "3"
+services:
+  app:
+    build:
+      context: ../app
+      dockerfile: ../Dockerfile-app
+    image: us.gcr.io/dataplatform-1363/${IMAGE_BASE_NAME}:dev
+    network_mode: bridge
+  
+  deploy:
+    build:
+      context: ..
+      dockerfile: Dockerfile-deploy
+    image: us.gcr.io/dataplatform-1363/${IMAGE_BASE_NAME}-deploy:dev
+    network_mode: bridge
+    volumes: 
+      - gcloud_config:/root/.config
+
+volumes:
+  gcloud_config: {}
