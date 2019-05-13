@@ -24,7 +24,7 @@ services:
 
   nginx:
     build:
-      context: ./nginx
+      context: ../nginx
     environment:
       NGINX_HOST: jenkins-local-dev.ascendanalyticshub.com
     depends_on:
@@ -36,6 +36,7 @@ services:
         aliases: 
           - jenkins-local.ascendanalyticshub.com
       backend: {}
+
   jenkins:
     image: us.gcr.io/dataplatform-1363/acm.dp.jenkins.docker.base:latest
     ports:

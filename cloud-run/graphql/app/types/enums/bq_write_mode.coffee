@@ -1,11 +1,11 @@
 _ = require 'lodash'
-Helper = require "/app/helper"
+FuncHelper = require "/app/func_helper"
 {
   GraphQLEnumType
 } = require 'graphql'
 
 module.exports = new GraphQLEnumType {
-  name: Helper.enumTypeName __filename
+  name: FuncHelper.enumTypeName __filename
   #description: "Aboss Client Account"
   values: {
     APPEND: {

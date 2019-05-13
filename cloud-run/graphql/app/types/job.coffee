@@ -1,13 +1,19 @@
-Helper = require '/app/helper'
+FuncHelper = require '/app/func_helper'
 {
   GraphQLObjectType
   GraphQLString
 } = require 'graphql'
 
 module.exports = new GraphQLObjectType {
-  name: Helper.typeName __filename
+  name: FuncHelper.typeName __filename
   fields: -> {
     name: {
+      type: GraphQLString
+    }
+    _class: {
+      type: GraphQLString
+    }
+    url: {
       type: GraphQLString
     }
     fullName: {

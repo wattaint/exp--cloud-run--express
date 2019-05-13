@@ -22,15 +22,14 @@ self = {
   enumTypeName: (filename) ->
     "#{self.fileName filename}EnumType"
 
-  FileName: (filename) ->
-    path.basename filename
+  name: (aFileName) ->
+    apiName       = _.upperFirst _.camelCase aFileName
+    fileName      = self.fileName aFileName
+    typeName      = self.typeName aFileName
+    inputTypeName = self.inputTypeName aFileName
+    enumTypeName  = self.enumTypeName aFileName
 
-  name: (filename) ->
-    FileName  = _.first path.basename(filename).split '.'
-    ApiName   = _.upperFirst _.camelCase FileName
-
-    ret = { ApiName }
-    ret
+    { apiName, fileName, typeName, inputTypeName, enumTypeName }
 }
 
 module.exports = _.extend self, {

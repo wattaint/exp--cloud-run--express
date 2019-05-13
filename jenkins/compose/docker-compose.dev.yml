@@ -1,0 +1,9 @@
+version: "3.3"
+services:
+  dpapi:
+    ports:
+      - 443:443
+
+  jenkins:
+    ports:
+      - 8080:8080

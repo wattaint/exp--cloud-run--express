@@ -1,6 +1,6 @@
 {
   _, path, inputTypeName, fileName
-} = require '../../helper'
+} = require '../../func_helper'
 
 {
   GraphQLInputObjectType

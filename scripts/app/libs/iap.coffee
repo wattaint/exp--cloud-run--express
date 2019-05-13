@@ -1,6 +1,7 @@
 
 # https://developers.google.com/identity/protocols/OAuth2ServiceAccount
 # https://stackoverflow.com/questions/44507801/getting-google-idtoken-for-service-account
+# https://bravenewgeek.com/api-authentication-with-gcp-identity-aware-proxy/
 _         = require 'lodash'
 axios     = require 'axios'
 colors    = require 'colors'
