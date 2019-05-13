@@ -22,6 +22,14 @@ services:
     networks:
       api:
 
+  nodeproxy:
+    build:
+      context: ../node-proxy
+    depends_on: 
+      - jenkins
+    networks: 
+      backend: {}
+    
   nginx:
     build:
       context: ../nginx

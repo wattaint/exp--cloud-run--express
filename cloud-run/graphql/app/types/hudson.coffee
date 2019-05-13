@@ -1,8 +1,9 @@
 FuncHelper = require '/app/func_helper'
 {
+  GraphQLInt
+  GraphQLList
   GraphQLObjectType
   GraphQLString
-  GraphQLInt
 } = require 'graphql'
 
 module.exports = new GraphQLObjectType {
@@ -16,6 +17,20 @@ module.exports = new GraphQLObjectType {
     }
     numExecutors: {
       type: GraphQLInt
+    }
+    nodeDescription: {
+      type: GraphQLString
+    }
+    assignedLabels: {
+      type: new GraphQLList require('/app/types/assigned_label')
+      resolve: ({ assignedLabels }) ->
+        assignedLabels
+    }
+    jobs: {
+      type: new GraphQLList require('/app/types/job')
+      resolve: ({ jobs }) ->
+        #console.log '--- resi --', arguments
+        jobs
     }
   }
 }
