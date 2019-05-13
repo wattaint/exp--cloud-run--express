@@ -4,6 +4,7 @@ source _common.sh
 
 gcloud beta run deploy \
 ${IMAGE_BASE_NAME} \
+--allow-unauthenticated \
 --region us-central1 \
 --project dataplatform-1363 \
 --image us.gcr.io/dataplatform-1363/${IMAGE_BASE_NAME}:dev \

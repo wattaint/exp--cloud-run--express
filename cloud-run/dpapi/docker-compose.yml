@@ -1,0 +1,13 @@
+version: "3"
+services:
+  deploy:
+    build: .
+    image: us.gcr.io/dataplatform-1363/exp-cloud-run--dapi-deploy:dev
+    network_mode: bridge
+    volumes: 
+      - gcloud_config:/root/.config
+      - .:/app
+    working_dir: /app
+    command: ./deploy.sh
+volumes:
+  gcloud_config: {}

@@ -1,14 +1,19 @@
-express     = require 'express'
-graphqlHTTP = require 'express-graphql'
-GraphQLSchema = require './schema'
+express       = require 'express'
+graphqlHTTP   = require 'express-graphql'
+#GraphQLSchema = require './schema/schema'
 
 app = express()
 
-app.use '/graphql', graphqlHTTP {
-  schema: GraphQLSchema
-  graphiql: true
-}
+schema = require './schema/schema'
 
-port = process.env.PORT || 80
-app.listen port, ->
-  console.log "Listened at port: #{port}"
+main = ->
+  app.use '/graphql', graphqlHTTP {
+    schema: await schema()
+    graphiql: true
+  }
+
+  port = process.env.PORT || 80
+  app.listen port, ->
+    console.log "GraphQL Api Listened at port: #{port}"
+
+main()

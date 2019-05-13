@@ -1,0 +1,68 @@
+version: "3.3"
+services:
+  dpapi:
+    image: us.gcr.io/dataplatform-1363/acm.dp.dataplatform-api
+    hostname: dpapi-local.ascendanalyticshub.com
+    ports:
+      - 443:443
+    environment:
+      SPRING_APPLICATION_NAME: "dpapi-local-dev"
+      SPRING_ADMIN_URL: "https://dpapi-admin.ascendanalyticshub.com"
+      
+      JENKINS_URL: https://dpapi-staging-dp.ascendanalyticshub.com
+      JENKINS_USER: "admin"
+      JENKINS_API_TOKEN: "11d1c1555184e1b1da665e4efc5225563c"
+
+      #JENKINS_URL: "https://jenkins-acm-inter-staging.ascendanalyticshub.com"
+
+      CLIENT_TAG_ENV: "DEV"
+      CLIENT_TAG_COUNTRY: "TH"
+      CLIENT_TAG_URL: "https://dpapi-vn.ascendanalyticshub.com/swagger-ui.html"
+      DPAPI_API_TOKEN: "0bf97503-802a-4b72-9ec1-0f12c635ba3a"
+    networks:
+      api:
+
+  nginx:
+    build:
+      context: ./nginx
+    environment:
+      NGINX_HOST: jenkins-local-dev.ascendanalyticshub.com
+    depends_on:
+      - jenkins
+    volumes:
+      - nginx_data:/data
+    networks: 
+      api:
+        aliases: 
+          - jenkins-local.ascendanalyticshub.com
+      backend: {}
+  jenkins:
+    image: us.gcr.io/dataplatform-1363/acm.dp.jenkins.docker.base:latest
+    ports:
+      - 8080:8080
+    environment: 
+      BITBUCKET_DSL_REPO: https://acm_dataplatform@bitbucket.org/ascendcorp/acm-dp-eq-etl-config.git
+      CHECKOUT_PATH: DSL
+      ENV_TIER: dev
+      INFLUXDB_DATABASE_NAME: jenkins-cloud-run-dev
+      INFLUXDB_DESCRIPTION: xxxxx
+      JENKINS_PASSWORD: Tesseract
+
+      OVERRIDE_PV_PLUGINS_WITH_IMAGE_PLUGINS: 'true'
+      DISABLE_ADMINISTRATIVE_MONITORS: 'true'
+      OPENSHIFT_ENABLE_OAUTH: 'false'
+      JENKINS_JAVA_OPTIONS: "-Dpermissive-script-security.enabled=true"
+      TZ: Asia/Bangkok
+    working_dir: /var/lib/jenkins
+    volumes: 
+      - jenkins_home:/var/lib/jenkins
+    networks: 
+      backend: {}
+
+volumes:
+  jenkins_home: {}
+  nginx_data: {}
+
+networks: 
+  api: {}
+  backend: {}

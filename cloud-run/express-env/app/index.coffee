@@ -82,7 +82,7 @@ app.get '/env', (req, resp) ->
   resp.json { ipv4, env: process.env, reqHeaders: req.headers }
 
 app.get '/test', (req, resp) ->
-  url = "https://dpapi-staging-dp.ascendanalyticshub.com/env"
+  url = "https://dpapi-staging-dp.ascendanalyticshub.com"
   
   try
     jwt = await buildSignedHeadersJWTToken()
