@@ -22,7 +22,7 @@ services:
     networks:
       api:
 
-  nodeproxy:
+  proxy:
     build:
       context: ../node-proxy
     depends_on: 

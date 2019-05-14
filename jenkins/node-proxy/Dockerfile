@@ -8,8 +8,10 @@ ENV PATH $PATH:/node_modules/.bin
 
 RUN npm install -g npm@6.9.0
 COPY package.json package-lock.json /
-RUN npm install
+RUN npm install && pm2 install coffeescript
 
 COPY . /app
 WORKDIR /app
-CMD [ "coffee", "index.coffee" ]
+
+CMD [ "pm2-docker", "/app/process.yml" ]
+RUN echo "set mouse-=a" > ~/.vimrc

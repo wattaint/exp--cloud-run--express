@@ -17,6 +17,7 @@
     "fast-glob": "^2.2.6",
     "graphql": "^14.3.0",
     "jenkins": "^0.25.0",
+    "jsonwebtoken": "^8.5.1",
     "jws": "^3.2.2",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",

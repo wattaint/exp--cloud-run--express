@@ -4,11 +4,13 @@ services:
     ports:
       - 443:443
 
-  nodeproxy:
+  proxy:
     restart: always
+    environment: 
+      NODE_ENV: production
     ports: 
       - 80:80
-    command: nodemon index.coffee
+    # command: nodemon index.coffee
 
   jenkins:
     ports:
