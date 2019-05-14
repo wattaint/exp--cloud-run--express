@@ -6,7 +6,7 @@ FuncHelper = require '/app/func_helper'
 
 XML     = require 'pixl-xml'
 
-{ getInstance, jobFullNameFromUrl } = require('/app/libs/jenkins')
+{ getInstance, jobFullNameFromUrl, jobInfoLoader } = require('/app/libs/jenkins')
 
 module.exports = new GraphQLObjectType {
   name: FuncHelper.typeName __filename
@@ -26,7 +26,7 @@ module.exports = new GraphQLObjectType {
     color: { type: GraphQLString }
     info: {
       type: require('/app/types/job_info')
-      resolve: ({ url }) ->
+      resolve1: ({ url }) ->
         fullName = jobFullNameFromUrl url
         jenkins = await getInstance()
         resp = await jenkins.job.getAsync fullName
@@ -34,6 +34,10 @@ module.exports = new GraphQLObjectType {
         console.log resp
         console.log '---'
         resp
+
+      resolve: ({ url }) ->
+        fullName = jobFullNameFromUrl url
+        jobInfoLoader().load url
     }
     config: {
       type: require('/app/types/job_config')

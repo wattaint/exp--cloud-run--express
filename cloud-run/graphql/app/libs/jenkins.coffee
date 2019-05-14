@@ -1,7 +1,7 @@
+DataLoader = require('dataloader')
 Promise   = require 'bluebird'
 URL       = require 'url'
 _         = require 'lodash'
-
 
 { buildSignedHeadersJWTToken, fetchIdToken } = require './request'
 
@@ -130,6 +130,13 @@ self = {
     { id_token } = await fetchIdToken token
     selfJenkins = self.buildJenkinsInstance USE_JENKINS, id_token
     selfJenkins
+
+  jobInfoLoader: ->
+    new DataLoader (keys) ->
+      jenkins = await self.getInstance()
+      Promise.map keys, (url) ->
+        fullName = self.jobFullNameFromUrl url
+        jenkins.job.getAsync fullName
 }
 
 module.exports = self
