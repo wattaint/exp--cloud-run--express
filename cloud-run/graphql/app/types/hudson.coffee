@@ -1,3 +1,5 @@
+_ = require 'lodash'
+Promise = require 'bluebird'
 FuncHelper = require '/app/func_helper'
 {
   GraphQLInt
@@ -5,6 +7,8 @@ FuncHelper = require '/app/func_helper'
   GraphQLObjectType
   GraphQLString
 } = require 'graphql'
+
+{ jobFullNameFromUrl } = require '/app/libs/jenkins'
 
 module.exports = new GraphQLObjectType {
   name: FuncHelper.typeName __filename
@@ -29,8 +33,12 @@ module.exports = new GraphQLObjectType {
     jobs: {
       type: new GraphQLList require('/app/types/job')
       resolve: ({ jobs }) ->
-        #console.log '--- resi --', arguments
-        jobs
+        jobs.map (job) ->
+          fullName = _(job).get 'fullName'
+          unless fullName
+            fullName = jobFullNameFromUrl job.url
+            _.extend job, { fullName }
+          job
     }
   }
 }

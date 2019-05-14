@@ -41,6 +41,7 @@ getRootQueryType = (aRootDirPath) ->
   rootQueryFields
 
 module.exports = ->
+  
   { rootQueryFields, mutationFields } = await Promise.props {
     rootQueryFields: getRootQueryType(BASE_QUERY_DIR)
     mutationFields: getRootQueryType(BASE_MUTATION_DIR)

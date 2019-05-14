@@ -1,6 +1,6 @@
 _ = require 'lodash'
 Helper = require "/app/func_helper"
-RequestHelper = require '/app/request_helper'
+Jenkins = require '../../libs/jenkins'
 
 {
   GraphQLInputObjectType
@@ -16,6 +16,8 @@ module.exports = {
   name: apiName
   type: Type
   resolve: (root, args, ctx, meta) ->
-    resp = await RequestHelper.getJenkins 'jobs'
+    jenkins = await Jenkins.getInstance()
+
+    resp = await jenkins.infoAsync()
     resp
 }

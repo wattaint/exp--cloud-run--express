@@ -4,8 +4,10 @@ http      = require 'http'
 httpProxy = require 'http-proxy'
 JWT       = require 'jsonwebtoken'
 
-ExpectedAud = "/projects/863016118673/global/backendServices/6645180094119552343"
-proxy = httpProxy.createProxyServer({})
+ExpectedAud = _(process.env).get(
+  'SIGNED_HEADER_JWT_AUDIENCE',
+  '/projects/863016118673/global/backendServices/6645180094119552343'
+)
 
 PublickKeyCache = {}
 getPublicKey = ({ alg, typ, kid }, callback) ->
@@ -25,7 +27,8 @@ validate = (token) ->
       aud = _(decoded).get 'aud'
       return reject('Signed Header JWT Audience, Invalid') unless aud == ExpectedAud
       resolve()
-      
+
+proxy = httpProxy.createProxyServer({})
 proxy.on 'proxyReq', (proxyReq, req, res, options) ->
   apiAcct   = _(req.headers).get 'x-goog-authenticated-user-email'
   if apiAcct

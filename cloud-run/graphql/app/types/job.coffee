@@ -4,6 +4,10 @@ FuncHelper = require '/app/func_helper'
   GraphQLString
 } = require 'graphql'
 
+XML     = require 'pixl-xml'
+
+{ getInstance, jobFullNameFromUrl } = require('/app/libs/jenkins')
+
 module.exports = new GraphQLObjectType {
   name: FuncHelper.typeName __filename
   fields: -> {
@@ -19,15 +23,25 @@ module.exports = new GraphQLObjectType {
     fullName: {
       type: GraphQLString
     }
-    endPoint: {
-      type: GraphQLString
-      description: """
-        Job endpoint
-
-        **Example:**
-
-        "view/acm-inter-staging/job/vn_operation_authcenter/job/biz_customer_session"
-      """
+    color: { type: GraphQLString }
+    info: {
+      type: require('/app/types/job_info')
+      resolve: ({ url }) ->
+        fullName = jobFullNameFromUrl url
+        jenkins = await getInstance()
+        resp = await jenkins.job.getAsync fullName
+        console.log '------------------ job get ----------------'
+        console.log resp
+        console.log '---'
+        resp
+    }
+    config: {
+      type: require('/app/types/job_config')
+      resolve: ({ fullName }) ->
+        fullName = jobFullNameFromUrl url
+        jenkins = await getInstance()
+        res = await jenkins.job.configAsync fullName
+        XML.parse res
     }
   }
 }

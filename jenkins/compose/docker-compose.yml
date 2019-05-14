@@ -24,27 +24,14 @@ services:
 
   proxy:
     build:
-      context: ../node-proxy
+      context: ../proxy
+    environment: 
+      SIGNED_HEADER_JWT_AUDIENCE: /projects/863016118673/global/backendServices/6645180094119552343
     depends_on: 
       - jenkins
     networks: 
       backend: {}
     
-  nginx:
-    build:
-      context: ../nginx
-    environment:
-      NGINX_HOST: jenkins-local-dev.ascendanalyticshub.com
-    depends_on:
-      - jenkins
-    volumes:
-      - nginx_data:/data
-    networks: 
-      api:
-        aliases: 
-          - jenkins-local.ascendanalyticshub.com
-      backend: {}
-
   jenkins:
     image: us.gcr.io/dataplatform-1363/acm.dp.jenkins.docker.base:latest
     ports:
@@ -70,7 +57,6 @@ services:
 
 volumes:
   jenkins_home: {}
-  nginx_data: {}
 
 networks: 
   api: {}
